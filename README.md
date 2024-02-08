@@ -5,6 +5,9 @@ When the ball hits a block, each block changes according to the Pokémon's type 
 
 ![screenshot](https://github.com/eightgamedev/pong-wars-pokemon/assets/47023171/4f662c43-592a-4792-963b-63f5c0424030)
 
+# Video
+Japanese Video : [https://www.youtube.com/watch?v=Cgo64CcLdMU&t=16s](https://www.youtube.com/watch?v=Cgo64CcLdMU&t=16s) 
+
 # License
 
 pong-wars-pokemon is provided under the MIT License. Please see the LICENCE file for details.
