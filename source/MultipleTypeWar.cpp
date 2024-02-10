@@ -17,32 +17,53 @@ void updateBlockWithMultipleType(BlockWithMultipleType& block, const BallWithMul
 	blockCounts.at(block.getTypes())--;
 	block.setType(ball.getTypes());
 	blockCounts.at(block.getTypes())++;
-	updateBlockCountHistoryForMultipleType(block.getTypes(), time, 1, blockCountsHistory);
+	// updateBlockCountHistoryForMultipleType(block.getTypes(), time, 1, blockCountsHistory);
 }
 
-void checkCollisionAndBounceForMultipleType(BallWithMultipleType &ball, Grid<BlockWithMultipleType>& blocks, HashTable<Types, size_t>& blockCounts, Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory)
+void checkCollisionAndBounceForMultipleType(BallWithMultipleType &ball,
+	Grid<BlockWithMultipleType>& blocks,
+	HashTable<Types, size_t>& blockCounts,
+	Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory,
+	Size GridSize,
+	Vec2 BlockSize
+)
 {
-	for (auto& block : blocks) {
-		if (!ball.getCircle().intersects(block.getRect())) {
-			continue;
-		}
+	const Point gridPos = ball.getPos().asPoint() / BlockSize.asPoint();
 
-		if (ball.getTypes() == block.getTypes()) {
-			continue;
-		}
+	// ボールの位置を基に、調査するグリッドセルの範囲を決定
+	int startX = Max(0, gridPos.x - 1);
+	int endX = Min(GridSize.x - 1, gridPos.x + 1);
+	int startY = Max(0, gridPos.y - 1);
+	int endY = Min(GridSize.y - 1, gridPos.y + 1);
 
-		double affinityFirst = TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type1 }) + TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type2 });
-		double affinitySecond = TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type2}) + TypeAffinityTable.at({ball.getTypes().type2, block.getTypes().type2});
-		double affinity = (affinityFirst + affinitySecond) / 2;
-
-		bool success = RandomBool(affinity * 0.25);
-
-		if (success)
+	for (int x = startX; x <= endX; ++x)
+	{
+		for (int y = startY; y <= endY; ++y)
 		{
-			updateBlockWithMultipleType(block, ball, Scene::Time(), blockCounts, blockCountsHistory);
-		}
+			auto& block = blocks[y][x];
 
-		ball.bounce(block.getRect());
+			if (!ball.getCircle().intersects(block.getRect())) {
+				continue;
+			}
+
+			if (ball.getTypes() == block.getTypes()) {
+				continue;
+			}
+
+
+			double affinityFirst = TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type1 }) + TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type2 });
+			double affinitySecond = TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type2 }) + TypeAffinityTable.at({ ball.getTypes().type2, block.getTypes().type2 });
+			double affinity = (affinityFirst + affinitySecond) / 2;
+
+			bool success = RandomBool(affinity * 0.25);
+
+			if (success)
+			{
+				updateBlockWithMultipleType(block, ball, Scene::Time(), blockCounts, blockCountsHistory);
+			}
+
+			ball.bounce(block.getRect());
+		}
 	}
 }
 
@@ -223,7 +244,7 @@ void MultipleTypeWar::update()
 		for (auto& ball : balls.second)
 		{
 			ball.update(FieldSize);
-			checkCollisionAndBounceForMultipleType(ball, blocks, blockCounts, blockCountsHistory);
+			checkCollisionAndBounceForMultipleType(ball, blocks, blockCounts, blockCountsHistory, GridSize, BlockSize);
 		}
 	}
 

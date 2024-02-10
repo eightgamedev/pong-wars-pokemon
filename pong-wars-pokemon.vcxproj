@@ -338,6 +338,7 @@
     <ClInclude Include="include\BlockWithMultipleType.hpp" />
     <ClInclude Include="include\Common.hpp" />
     <ClInclude Include="include\MultipleTypeWar.hpp" />
+    <ClInclude Include="include\QuadTree.hpp" />
     <ClInclude Include="include\Setting.hpp" />
     <ClInclude Include="include\SingleTypeWar.hpp" />
     <ClInclude Include="include\Type.hpp" />
