@@ -1,6 +1,7 @@
 ﻿# include "Common.hpp"
 # include "Setting.hpp"
 # include "SingleTypeWar.hpp"
+# include "MultipleTypeWar.hpp"
 
 void Main()
 {
@@ -17,9 +18,11 @@ void Main()
 	FontAsset::Register(U"Title", 60, Typeface::Bold);
 
 	App manager;
-	manager.add<Setting>(State::Setting);
-	manager.add<SingleTypeWar>(State::SingleTypeWar);
-	manager.init(State::SingleTypeWar);
+	manager.add<Setting>(State::Setting)
+		.add<SingleTypeWar>(State::SingleTypeWar)
+		.add<MultipleTypeWar>(State::MultipleTypeWar);
+
+	manager.init(State::MultipleTypeWar);
 
 	while (System::Update())
 	{

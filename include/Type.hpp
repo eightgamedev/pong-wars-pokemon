@@ -391,3 +391,20 @@ const HashTable<std::pair<Type, Type>, double> TypeAffinityTable = {
 	{ { Type::Fairy, Type::Steel }, 0.5 },
 	{ { Type::Fairy, Type::Fairy }, 1.0 },
 };
+
+struct Types
+{
+	Type type1;
+	Type type2;
+};
+
+bool operator==(const Types& a, const Types& b);
+
+namespace std {
+	template<>
+	struct hash<Types> {
+		size_t operator()(const Types& types) const {
+			return static_cast<size_t>(types.type1) * 100 + static_cast<size_t>(types.type2);
+		}
+	};
+}

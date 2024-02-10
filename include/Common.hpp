@@ -5,7 +5,7 @@
 # include "Ball.hpp"
 # include "Block.hpp"
 
-
+void DrawGradientText(const Font& font, const String& text, const Vec2& pos, const ColorF& topColor, const ColorF& bottomColor);
 const Polygon getRectFrame(const RectF& rect, const double thickness);
 void updateBlockCountHistory(const Type type, const double time, const int32 countChange, Array<Array<std::pair<double, size_t>>>& blockCountsHistory);
 void updateBlock(Block& block, const Ball& ball, const double time, const int32 change, HashTable<Type, size_t>& blockCounts, Array<Array<std::pair<double, size_t>>>& blockCountsHistory);
@@ -17,6 +17,7 @@ enum class State
 {
 	Setting,
 	SingleTypeWar,
+	MultipleTypeWar,
 };
 
 struct Common

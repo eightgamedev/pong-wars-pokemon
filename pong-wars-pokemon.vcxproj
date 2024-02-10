@@ -122,6 +122,7 @@
     <ClCompile Include="source\MultipleTypeWar.cpp" />
     <ClCompile Include="source\Setting.cpp" />
     <ClCompile Include="source\SingleTypeWar.cpp" />
+    <ClCompile Include="source\Type.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -332,7 +333,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Ball.hpp" />
+    <ClInclude Include="include\BallWithMultipleType.hpp" />
     <ClInclude Include="include\Block.hpp" />
+    <ClInclude Include="include\BlockWithMultipleType.hpp" />
     <ClInclude Include="include\Common.hpp" />
     <ClInclude Include="include\MultipleTypeWar.hpp" />
     <ClInclude Include="include\Setting.hpp" />
