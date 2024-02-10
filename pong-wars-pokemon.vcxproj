@@ -118,6 +118,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="source\Common.cpp" />
+    <ClCompile Include="source\MultipleTypeWar.cpp" />
+    <ClCompile Include="source\Setting.cpp" />
+    <ClCompile Include="source\SingleTypeWar.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -329,6 +333,10 @@
   <ItemGroup>
     <ClInclude Include="include\Ball.hpp" />
     <ClInclude Include="include\Block.hpp" />
+    <ClInclude Include="include\Common.hpp" />
+    <ClInclude Include="include\MultipleTypeWar.hpp" />
+    <ClInclude Include="include\Setting.hpp" />
+    <ClInclude Include="include\SingleTypeWar.hpp" />
     <ClInclude Include="include\Type.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
