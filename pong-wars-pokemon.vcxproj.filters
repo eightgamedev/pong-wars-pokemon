@@ -159,6 +159,9 @@
     <ClCompile Include="source\Type.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="App\icon.ico">
@@ -851,7 +854,10 @@
     <ClInclude Include="include\BlockWithMultipleType.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\QuadTree.hpp">
+    <ClInclude Include="include\Button.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIVariables.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

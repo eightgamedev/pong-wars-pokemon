@@ -22,7 +22,7 @@ void Main()
 		.add<SingleTypeWar>(State::SingleTypeWar)
 		.add<MultipleTypeWar>(State::MultipleTypeWar);
 
-	manager.init(State::MultipleTypeWar);
+	manager.init(State::Setting);
 
 	while (System::Update())
 	{
