@@ -22,33 +22,52 @@ void updateBlock(Block& block, const Ball& ball, const double time, const int32 
 }
 
 // ボールとブロックの衝突判定と反射
-void checkCollisionAndBounce(Ball& ball, Grid<Block>& blocks, HashTable<Type, size_t>& blockCounts, Array<Array<std::pair<double, size_t>>>& blockCountsHistory)
+void checkCollisionAndBounce(
+	Ball& ball,
+	Grid<Block>& blocks,
+	HashTable<Type, size_t>& blockCounts,
+	Array<Array<std::pair<double, size_t>>>& blockCountsHistory,
+	Size GridSize,
+	Vec2 BlockSize)
 {
-	for (auto& block : blocks) {
-		if (!ball.getCircle().intersects(block.getRect())) {
-			continue;
-		}
+	const Point gridPos = ball.getPos().asPoint() / BlockSize.asPoint();
+	// ボールの位置を基に、調査するグリッドセルの範囲を決定
+	int startX = Max(0, gridPos.x - 1);
+	int endX = Min(GridSize.x - 1, gridPos.x + 1);
+	int startY = Max(0, gridPos.y - 1);
+	int endY = Min(GridSize.y - 1, gridPos.y + 1);
 
-		if (ball.getType() == block.getType()) {
-			continue;
-		}
+	for (int x = startX; x <= endX; ++x)
+	{
+		for (int y = startY; y <= endY; ++y)
+		{
+			auto& block = blocks[y][x];
 
-		double affinity = TypeAffinityTable.at({ ball.getType(), block.getType() });
+			if (!ball.getCircle().intersects(block.getRect())) {
+				continue;
+			}
 
-		if (affinity == 2.0) {
-			updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
-		}
-		else if (affinity == 1.0 && RandomBool(0.25)) {
-			updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
-		}
-		else if (affinity == 0.5 && RandomBool(0.125)) {
-			updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
-		}
-		else if (affinity == 0.0) {
-			updateBlockCountHistory(block.getType(), Scene::Time(), 0, blockCountsHistory);
-		}
+			if (ball.getType() == block.getType()) {
+				continue;
+			}
 
-		ball.bounce(block.getRect());
+			double affinity = TypeAffinityTable.at({ ball.getType(), block.getType() });
+
+			if (affinity == 2.0) {
+				updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
+			}
+			else if (affinity == 1.0 && RandomBool(0.25)) {
+				updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
+			}
+			else if (affinity == 0.5 && RandomBool(0.125)) {
+				updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
+			}
+			else if (affinity == 0.0) {
+				updateBlockCountHistory(block.getType(), Scene::Time(), 0, blockCountsHistory);
+			}
+
+			ball.bounce(block.getRect());
+		}
 	}
 }
 
@@ -214,7 +233,7 @@ void SingleTypeWar::update()
 	for (auto& ball : balls)
 	{
 		ball.update(FieldSize);
-		checkCollisionAndBounce(ball, blocks, blockCounts, blockCountsHistory);
+		checkCollisionAndBounce(ball, blocks, blockCounts, blockCountsHistory, GridSize, BlockSize);
 	}
 
 	adjustBallCounts(balls, blocks, ballCounts, blockCounts);

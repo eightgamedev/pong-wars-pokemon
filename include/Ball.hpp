@@ -38,6 +38,11 @@ public:
 		return m_type;
 	}
 
+	Vec2 getPos() const
+	{
+		return m_pos;
+	}
+
 	void bounce(RectF rect)
 	{
 		if (rect.right().intersects(m_circle)
