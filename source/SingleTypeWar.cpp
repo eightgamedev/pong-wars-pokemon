@@ -71,7 +71,7 @@ void checkCollisionAndBounce(
 	}
 }
 
-void adjustBallCounts(Array<Ball>& balls, const Grid<Block>& blocks, HashTable<Type, size_t>& ballCounts, const HashTable<Type, size_t>& blockCounts)
+void adjustBallCounts(HashTable<Type, Array<Ball>>& ballsByType, const Grid<Block>& blocks, HashTable<Type, size_t>& ballCounts, const HashTable<Type, size_t>& blockCounts)
 {
 	// 各タイプのボールの数を調整
 	for (const auto& pair : blockCounts)
@@ -81,39 +81,25 @@ void adjustBallCounts(Array<Ball>& balls, const Grid<Block>& blocks, HashTable<T
 		// 調整後のボールの数
 		int32 desiredBallCount = Max(blockCount / 100, 1);
 
-		// ボールが足りない場合は同じタイプのブロックからボールを追加
+		// ボールが足りない場合は同じタイプのボールの位置から追加
 		while (ballCounts[type] < desiredBallCount)
 		{
-			bool blockExists = false;
-			for (const auto& block : blocks)
+			for (auto& ball : ballsByType[type])
 			{
-				if (block.getType() == type)
+				ballsByType[type].push_back(Ball{ type, ball.getCircle().center });
+				ballCounts[type]++;
+				if (ballCounts[type] >= desiredBallCount)
 				{
-					balls.push_back(Ball(type, block.getRect().center()));
-					ballCounts[type]++;
-					blockExists = true;
 					break;
 				}
-			}
-			if (not blockExists)
-			{
-				break;
 			}
 		}
 
 		// ボールが多すぎる場合は削除
 		while (ballCounts[type] > desiredBallCount)
 		{
-			// このタイプのボールを見つけて削除
-			for (auto it = balls.begin(); it != balls.end(); ++it)
-			{
-				if (it->getType() == type)
-				{
-					balls.erase(it);
-					ballCounts[type]--;
-					break;
-				}
-			}
+			ballsByType[type].pop_back();
+			ballCounts[type]--;
 		}
 	}
 }
@@ -223,20 +209,23 @@ SingleTypeWar::SingleTypeWar(const InitData& init)
 		Vec2 sectionCenter = Vec2(sectionIndexX, sectionIndexY) * blockSectionSize + blockSectionSize / 2;
 
 		// ボールを作成し、初期位置をセクションの中心に設定
-		balls.emplace_back(static_cast<Type>(i), sectionCenter);
+		ballsByType[static_cast<Type>(i)].push_back(Ball{ static_cast<Type>(i), sectionCenter });
 		ballCounts[static_cast<Type>(i)]++;
 	}
 }
 
 void SingleTypeWar::update()
 {
-	for (auto& ball : balls)
+	for (auto& balls : ballsByType)
 	{
-		ball.update(FieldSize);
-		checkCollisionAndBounce(ball, blocks, blockCounts, blockCountsHistory, GridSize, BlockSize);
+		for (auto& ball : balls.second)
+		{
+			ball.update(FieldSize);
+			checkCollisionAndBounce(ball, blocks, blockCounts, blockCountsHistory, GridSize, BlockSize);
+		}
 	}
 
-	adjustBallCounts(balls, blocks, ballCounts, blockCounts);
+	adjustBallCounts(ballsByType, blocks, ballCounts, blockCounts);
 }
 
 void SingleTypeWar::draw() const
@@ -256,9 +245,12 @@ void SingleTypeWar::draw() const
 			block.draw();
 		}
 
-		for (auto& ball : balls)
+		for (auto& ball : ballsByType)
 		{
-			ball.draw();
+			for (auto& ball : ball.second)
+			{
+				ball.draw();
+			}
 		}
 
 		Wall.draw(Palette::White);

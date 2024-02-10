@@ -23,7 +23,7 @@ void checkCollisionAndBounce(
 	Size GridSize,
 	Vec2 BlockSize);
 void adjustBallCounts(
-	Array<Ball>& balls,
+	HashTable<Type, Array<Ball>>& ballsByType,
 	const Grid<Block>& blocks,
 	HashTable<Type, size_t>& ballCounts,
 	const HashTable<Type, size_t>& blockCounts
@@ -51,7 +51,7 @@ private:
 	Array<Array<std::pair<double, size_t>>> blockCountsHistory{ static_cast<size_t>(Type::Count) };
 
 	const size_t typeCount{ static_cast<size_t>(Type::Count) };
-	Array<Ball> balls;
+	HashTable<Type, Array<Ball>> ballsByType;
 	Grid<Block> blocks{ GridSize };
 
 	// 描画位置と大きさを設定
