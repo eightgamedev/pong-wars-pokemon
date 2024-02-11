@@ -25,7 +25,8 @@ private:
 	void drawGraph() const;
 
 	const Vec2 BlockSize{ 10, 10 };
-	const Size GridSize{ 72, 72 };
+	// const Size GridSize{ 72, 72 };
+	const Size GridSize{ 144, 144 };
 	const Size FieldSize = GridSize * BlockSize.asPoint();
 	const size_t typeCount{ static_cast<size_t>(Type::Count) };
 	const size_t typeCombinationCount = typeCount * (typeCount - 1) / 2;
