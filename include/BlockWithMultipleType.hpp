@@ -15,8 +15,8 @@ public:
 
 	void draw() const
 	{
-		Color innerColor = m_colors[0];
-		Color outerColor = m_colors[1];
+		Color outerColor = m_colors[0];
+		Color innerColor = m_colors[1];
 
 		m_rect.draw(outerColor).stretched(-3).draw(innerColor);
 	}
