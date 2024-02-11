@@ -16,7 +16,7 @@ void MultipleTypeWar::deleteBlockCounts(const double time)
 void MultipleTypeWar::updateBlockCountsHistory()
 {
 	static double lastUpdateTimeForHistory = 0.0;
-	double currentTime = Scene::Time();
+	double currentTime = Scene::Time() - sceneStartTime;
 	double interval = 0.5;
 
 	if (currentTime - lastUpdateTimeForHistory >= interval)
@@ -31,7 +31,7 @@ void MultipleTypeWar::updateBlockCountsHistory()
 void MultipleTypeWar::updateBlockCountsRanking()
 {
 	static double lastUpdateTimeForRanking = 0.0;
-	double currentTime = Scene::Time();
+	double currentTime = Scene::Time() - sceneStartTime;
 	double interval = 0.5;
 
 	if (currentTime - lastUpdateTimeForRanking >= interval)
@@ -212,26 +212,23 @@ void MultipleTypeWar::drawGraph() const
 		}
 	}
 
-	// 現在の時間を取得
-	double currentTime = Scene::Time();
-
-	// 時間の最大値
-	double maxTime = 30;
-
-	// 過去30秒以降の最小の時間を計算
-	double minTime = std::max(0.0, currentTime - maxTime);
+	const double timeRange = 30;
+	double currentTime = Scene::Time() - sceneStartTime;
+	double minTime = currentTime - timeRange;
+	double maxTime = timeRange;
 
 	// グラフのサイズとスケールを計算
 	const double graphHeight = 1000.0;
 	const double graphWidth = 1700.0;
 	const double timeScale = graphWidth / maxTime;
-	const double yScale = graphHeight / maxBlockCount; // maxBlockCountはブロックの最大数
+	const double yScale = graphHeight / maxBlockCount;
 
 	// グリッドの縦線を描画
 	for (int32 i = 0; i <= maxTime; i += 10) {
 		const double x = i * timeScale;
+		const int32 labelValue = maxTime - i;
 		Line(x, 0, x, graphHeight).draw(1, Palette::Gray);
-		const String label = Format(i);
+		const String label = labelValue == 0 ? Format(labelValue) : U"-{}"_fmt(labelValue);
 		FontAsset(U"Label")(label).draw(Arg::topCenter = Vec2(x, graphHeight + 10), Palette::White);
 	}
 
@@ -278,7 +275,7 @@ void MultipleTypeWar::drawGraph() const
 MultipleTypeWar::MultipleTypeWar(const InitData& init)
 	: IScene(init)
 {
-
+	sceneStartTime = Scene::Time();
 	for (size_t firstType = 0; firstType < typeCount; ++firstType)
 	{
 		for (size_t secondType = firstType; secondType < typeCount; ++secondType)

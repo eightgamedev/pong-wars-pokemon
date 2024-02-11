@@ -20,7 +20,7 @@ private:
 	void drawBalls() const;
 	void drawRankingBest() const;
 	void drawGraph() const;
-
+	double sceneStartTime;
 	const Vec2 BlockSize{ 15, 15 };
 	const Size GridSize{ 60, 60 };
 	const Size FieldSize = GridSize * BlockSize.asPoint();

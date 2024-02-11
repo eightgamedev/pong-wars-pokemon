@@ -23,7 +23,7 @@ private:
 	void drawRankingBest() const;
 	void drawRankingWorst() const;
 	void drawGraph() const;
-
+	double sceneStartTime;
 	const Vec2 BlockSize{ 10, 10 };
 	const Size GridSize{ 144, 144 };
 	const Size FieldSize = GridSize * BlockSize.asPoint();
