@@ -106,7 +106,7 @@ void MultipleTypeWar::adjustBallCounts()
 		Types types = pair.first;
 		int32 blockCount = pair.second;
 		// 調整後のボールの数
-		int32 desiredBallCount = Max(blockCount / 100, 1);
+		int32 desiredBallCount = Max(blockCount / 100, 0);
 
 		// ボールが足りない場合は同じタイプのボールの位置から追加
 		if (ballCounts[types] < desiredBallCount)
@@ -325,15 +325,15 @@ MultipleTypeWar::MultipleTypeWar(const InitData& init)
 			if (sectionIndexX > sectionIndexY)
 			{
 				types = Types{ static_cast<Type>(sectionIndexY), static_cast<Type>(sectionIndexX) };
+				ballCounts[Types{ static_cast<Type>(y), static_cast<Type>(x) }]++;
 			}
 			else
 			{
 				types = Types{ static_cast<Type>(sectionIndexX), static_cast<Type>(sectionIndexY) };
+				ballCounts[Types{ static_cast<Type>(x), static_cast<Type>(y) }]++;
 			}
 
-			// ボールを作成し、初期位置をセクションの中心に設定
 			ballsByType[types].push_back(BallWithMultipleType{ types, sectionCenter });
-			ballCounts[Types{ static_cast<Type>(y), static_cast<Type>(x) }]++;
 		}
 	}
 }
