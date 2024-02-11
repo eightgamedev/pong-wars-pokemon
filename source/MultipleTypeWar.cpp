@@ -1,11 +1,11 @@
 ﻿# include "MultipleTypeWar.hpp"
 
-void addBlockCounts(const double time, Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory, HashTable<Types, size_t>& blockCounts)
+void MultipleTypeWar::addBlockCounts(const double time)
 {
 	blockCountsHistory.push_back({ time, blockCounts });
 }
 
-void deleteBlockCounts(const double time, Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory)
+void MultipleTypeWar::deleteBlockCounts(const double time)
 {
 	while (!blockCountsHistory.isEmpty() && blockCountsHistory.front().first < time - 30)
 	{
@@ -13,34 +13,28 @@ void deleteBlockCounts(const double time, Array<std::pair<double, HashTable<Type
 	}
 }
 
-void updateBlockCountHistoryForMultipleType(Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory, HashTable<Types, size_t>& blockCounts)
+void MultipleTypeWar::updateBlockCountHistory()
 {
 	static double lastUpdateTime = 0.0;
 	double currentTime = Scene::Time();
 
 	if (currentTime - lastUpdateTime >= 1.0) // 1秒以上経過したかチェック
 	{
-		addBlockCounts(currentTime, blockCountsHistory, blockCounts); // 1秒ごとにブロック数の履歴を更新
+		addBlockCounts(currentTime); // 1秒ごとにブロック数の履歴を更新
 		lastUpdateTime = currentTime;
 	}
 
-	deleteBlockCounts(currentTime, blockCountsHistory); // 60秒以上前の履歴を削除
+	deleteBlockCounts(currentTime); // 60秒以上前の履歴を削除
 }
 
-void updateBlockWithMultipleType(BlockWithMultipleType& block, const BallWithMultipleType& ball, double time, HashTable<Types, size_t>& blockCounts, Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory)
+void MultipleTypeWar::updateBlock(BlockWithMultipleType& block, const BallWithMultipleType& ball, double time)
 {
 	blockCounts.at(block.getTypes())--;
 	block.setType(ball.getTypes());
 	blockCounts.at(block.getTypes())++;
 }
 
-void checkCollisionAndBounceForMultipleType(BallWithMultipleType &ball,
-	Grid<BlockWithMultipleType>& blocks,
-	HashTable<Types, size_t>& blockCounts,
-	Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory,
-	Size GridSize,
-	Vec2 BlockSize
-)
+void MultipleTypeWar::checkCollisionAndBounce(BallWithMultipleType &ball)
 {
 	const Point gridPos = ball.getPos().asPoint() / BlockSize.asPoint();
 
@@ -75,7 +69,7 @@ void checkCollisionAndBounceForMultipleType(BallWithMultipleType &ball,
 
 			if (canAttack)
 			{
-				updateBlockWithMultipleType(block, ball, Scene::Time(), blockCounts, blockCountsHistory);
+				updateBlock(block, ball, Scene::Time());
 			}
 
 			ball.bounce(block.getRect());
@@ -83,7 +77,7 @@ void checkCollisionAndBounceForMultipleType(BallWithMultipleType &ball,
 	}
 }
 
-void adjustBallCountsForMultipleType(HashTable<Types, Array<BallWithMultipleType>>& ballsByType, const Grid<BlockWithMultipleType>& blocks, HashTable<Types, size_t>& ballCounts, HashTable<Types, size_t>& blockCounts)
+void MultipleTypeWar::adjustBallCounts()
 {
 	// 各タイプのボールの数を調整
 	for (const auto& pair : blockCounts)
@@ -116,7 +110,7 @@ void adjustBallCountsForMultipleType(HashTable<Types, Array<BallWithMultipleType
 	}
 }
 
-void drawGraphForMultipleType(const Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory)
+void MultipleTypeWar::drawGraph() const
 {
 	size_t maxBlockCount = 0;
 	for (const auto& history : blockCountsHistory) {
@@ -260,13 +254,12 @@ void MultipleTypeWar::update()
 		for (auto& ball : balls.second)
 		{
 			ball.update(FieldSize);
-			checkCollisionAndBounceForMultipleType(ball, blocks, blockCounts, blockCountsHistory, GridSize, BlockSize);
+			checkCollisionAndBounce(ball);
 		}
 	}
 
-	adjustBallCountsForMultipleType(ballsByType, blocks, ballCounts, blockCounts);
-	updateBlockCountHistoryForMultipleType(blockCountsHistory, blockCounts);
-
+	adjustBallCounts();
+	updateBlockCountHistory();
 }
 
 void MultipleTypeWar::draw() const
@@ -346,6 +339,6 @@ void MultipleTypeWar::draw() const
 
 	{
 		const Transformer2D transformerForPlot{ matForPlot, TransformCursor::Yes };
-		drawGraphForMultipleType(blockCountsHistory);
+		drawGraph();
 	}
 }

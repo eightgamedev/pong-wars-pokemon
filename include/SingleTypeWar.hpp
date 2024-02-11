@@ -1,35 +1,6 @@
 ﻿# pragma once
 # include "Common.hpp"
 
-void updateBlockCountHistory(
-	const Type type,
-	const double time,
-	const int32 countChange,
-	Array<Array<std::pair<double, size_t>>>& blockCountsHistory
-);
-void updateBlock(
-	Block& block,
-	const Ball& ball,
-	const double time,
-	const int32 change,
-	HashTable<Type, size_t>& blockCounts,
-	Array<Array<std::pair<double, size_t>>>& blockCountsHistory
-);
-void checkCollisionAndBounce(
-	Ball& ball,
-	Grid<Block>& blocks,
-	HashTable<Type, size_t>& blockCounts,
-	Array<Array<std::pair<double, size_t>>>& blockCountsHistory,
-	Size GridSize,
-	Vec2 BlockSize);
-void adjustBallCounts(
-	HashTable<Type, Array<Ball>>& ballsByType,
-	const Grid<Block>& blocks,
-	HashTable<Type, size_t>& ballCounts,
-	const HashTable<Type, size_t>& blockCounts
-);
-void drawGraph(const Array<Array<std::pair<double, size_t>>>& blockCountsHistory);
-
 class SingleTypeWar : public App::Scene
 {
 public:
@@ -38,6 +9,12 @@ public:
 	void update() override;
 	void draw() const override;
 private:
+	void updateBlockCountHistory(const Type type, const double time, const int32 countChange);
+	void updateBlock(Block& block, const Ball& ball, const double time, const int32 change);
+	void checkCollisionAndBounce(Ball& ball);
+	void adjustBallCounts();
+	void drawGraph() const;
+
 	const Vec2 BlockSize{ 15, 15 };
 	const Size GridSize{ 60, 60 };
 	const Size FieldSize = GridSize * BlockSize.asPoint();

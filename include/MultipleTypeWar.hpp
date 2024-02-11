@@ -11,6 +11,14 @@ public:
 	void update() override;
 	void draw() const override;
 private:
+	void addBlockCounts(const double time);
+	void deleteBlockCounts(const double time);
+	void updateBlockCountHistory();
+	void updateBlock(BlockWithMultipleType& block, const BallWithMultipleType& ball, double time);
+	void checkCollisionAndBounce(BallWithMultipleType& ball);
+	void adjustBallCounts();
+	void drawGraph() const;
+
 	const Vec2 BlockSize{ 10, 10 };
 	const Size GridSize{ 72, 72 };
 	const Size FieldSize = GridSize * BlockSize.asPoint();

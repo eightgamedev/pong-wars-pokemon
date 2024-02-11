@@ -1,6 +1,6 @@
 ﻿# include "SingleTypeWar.hpp"
 
-void updateBlockCountHistory(const Type type, const double time, const int32 countChange, Array<Array<std::pair<double, size_t>>>& blockCountsHistory)
+void SingleTypeWar::updateBlockCountHistory(const Type type, const double time, const int32 countChange)
 {
 	// 60秒経過後、過去60秒より古いデータを削除
 	while (!blockCountsHistory[static_cast<size_t>(type)].isEmpty() && blockCountsHistory[static_cast<size_t>(type)].front().first < time - 60) {
@@ -12,23 +12,17 @@ void updateBlockCountHistory(const Type type, const double time, const int32 cou
 }
 
 // ブロックのタイプを更新
-void updateBlock(Block& block, const Ball& ball, const double time, const int32 change, HashTable<Type, size_t>& blockCounts, Array<Array<std::pair<double, size_t>>>& blockCountsHistory)
+void SingleTypeWar::updateBlock(Block & block, const Ball & ball, const double time, const int32 change)
 {
 	blockCounts.at(block.getType())--;
-	updateBlockCountHistory(block.getType(), time, -change, blockCountsHistory);
+	updateBlockCountHistory(block.getType(), time, -change);
 	block.setType(ball.getType());
 	blockCounts.at(block.getType())++;
-	updateBlockCountHistory(block.getType(), time, change, blockCountsHistory);
+	updateBlockCountHistory(block.getType(), time, change);
 }
 
 // ボールとブロックの衝突判定と反射
-void checkCollisionAndBounce(
-	Ball& ball,
-	Grid<Block>& blocks,
-	HashTable<Type, size_t>& blockCounts,
-	Array<Array<std::pair<double, size_t>>>& blockCountsHistory,
-	Size GridSize,
-	Vec2 BlockSize)
+void SingleTypeWar::checkCollisionAndBounce(Ball & ball)
 {
 	const Point gridPos = ball.getPos().asPoint() / BlockSize.asPoint();
 	// ボールの位置を基に、調査するグリッドセルの範囲を決定
@@ -54,16 +48,16 @@ void checkCollisionAndBounce(
 			double affinity = TypeAffinityTable.at({ ball.getType(), block.getType() });
 
 			if (affinity == 2.0) {
-				updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
+				updateBlock(block, ball, Scene::Time(), 1);
 			}
 			else if (affinity == 1.0 && RandomBool(0.25)) {
-				updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
+				updateBlock(block, ball, Scene::Time(), 1);
 			}
 			else if (affinity == 0.5 && RandomBool(0.125)) {
-				updateBlock(block, ball, Scene::Time(), 1, blockCounts, blockCountsHistory);
+				updateBlock(block, ball, Scene::Time(), 1);
 			}
 			else if (affinity == 0.0) {
-				updateBlockCountHistory(block.getType(), Scene::Time(), 0, blockCountsHistory);
+				updateBlockCountHistory(block.getType(), Scene::Time(), 0);
 			}
 
 			ball.bounce(block.getRect());
@@ -71,7 +65,7 @@ void checkCollisionAndBounce(
 	}
 }
 
-void adjustBallCounts(HashTable<Type, Array<Ball>>& ballsByType, const Grid<Block>& blocks, HashTable<Type, size_t>& ballCounts, const HashTable<Type, size_t>& blockCounts)
+void SingleTypeWar::adjustBallCounts()
 {
 	// 各タイプのボールの数を調整
 	for (const auto& pair : blockCounts)
@@ -104,7 +98,7 @@ void adjustBallCounts(HashTable<Type, Array<Ball>>& ballsByType, const Grid<Bloc
 	}
 }
 
-void drawGraph(const Array<Array<std::pair<double, size_t>>>& blockCountsHistory)
+void SingleTypeWar::drawGraph() const
 {
 	size_t maxBlockCount = 0;
 	for (const auto& history : blockCountsHistory) {
@@ -221,11 +215,11 @@ void SingleTypeWar::update()
 		for (auto& ball : balls.second)
 		{
 			ball.update(FieldSize);
-			checkCollisionAndBounce(ball, blocks, blockCounts, blockCountsHistory, GridSize, BlockSize);
+			checkCollisionAndBounce(ball);
 		}
 	}
 
-	adjustBallCounts(ballsByType, blocks, ballCounts, blockCounts);
+	adjustBallCounts();
 }
 
 void SingleTypeWar::draw() const
@@ -279,6 +273,6 @@ void SingleTypeWar::draw() const
 
 	{
 		const Transformer2D transformerForPlot{ matForPlot, TransformCursor::Yes };
-		drawGraph(blockCountsHistory);
+		drawGraph();
 	}
 }
