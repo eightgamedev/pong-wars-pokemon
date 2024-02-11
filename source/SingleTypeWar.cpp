@@ -301,16 +301,6 @@ void SingleTypeWar::draw() const
 			});
 
 		drawRankingBest(blockCountsRanking);
-
-
-		for (size_t i = 0; i < blockCountsRanking.size(); ++i)
-		{
-			const Vec2 textPos = { 0, 25 * i };
-			const Type type = blockCountsRanking[i].first;
-			const String text = typeName.at(type) + U": ";
-			FontAsset(U"Ranking")(text).draw(textPos, typeColors.at(type));
-			FontAsset(U"Ranking")(blockCountsRanking[i].second).draw(Arg::topRight = textPos.movedBy(150, 0), typeColors.at(type));
-		}
 	}
 
 	{
