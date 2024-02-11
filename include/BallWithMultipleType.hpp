@@ -15,7 +15,7 @@ public:
 
 		// 右上、右下、左上、左下の4方向からランダムに決定
 		const Array<Vec2> directions = { Vec2(1, -1), Vec2(1, 1), Vec2(-1, -1), Vec2(-1, 1) };
-		m_ballVelocity = directions[Random(3)] * 100;
+		m_ballVelocity = directions[Random(3)] * 50;
 	}
 
 	void update(const Size& FieldSize)
