@@ -44,8 +44,8 @@ private:
 	Grid<BlockWithMultipleType> blocks{ GridSize };
 
 	const double scaleField = 1.2;
-	double scaleRankingBest = 0.9;
-	double scaleRankingWorst = 0.9;
+	const double scaleRankingBest = 0.9;
+	const double scaleRankingWorst = 0.9;
 
 	// 描画位置と大きさを設定
 	Mat3x2 matTitle = Mat3x2::Translate(950, 0);
