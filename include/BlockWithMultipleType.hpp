@@ -39,6 +39,11 @@ public:
 		m_colors.push_back(typeColors.at(types.type2));
 	}
 
+	bool hasSingleType() const
+	{
+		return m_types.type1 == m_types.type2;
+	}
+
 private:
 	RectF m_rect;
 	Types m_types;

@@ -48,6 +48,11 @@ public:
 		return m_pos;
 	}
 
+	bool hasSingleType() const
+	{
+		return m_types.type1 == m_types.type2;
+	}
+
 	void bounce(RectF rect)
 	{
 		if (rect.right().intersects(m_circle)

@@ -68,10 +68,12 @@ void checkCollisionAndBounceForMultipleType(BallWithMultipleType &ball,
 			double affinityFirst = TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type1 }) + TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type2 });
 			double affinitySecond = TypeAffinityTable.at({ ball.getTypes().type1, block.getTypes().type2 }) + TypeAffinityTable.at({ ball.getTypes().type2, block.getTypes().type2 });
 			double affinity = (affinityFirst + affinitySecond) / 2;
+			if (ball.hasSingleType()) affinity /= 2;
+			if (block.hasSingleType()) affinity /= 2;
 
-			bool success = RandomBool(affinity * 0.25);
+			bool canAttack = RandomBool(affinity * 0.25);
 
-			if (success)
+			if (canAttack)
 			{
 				updateBlockWithMultipleType(block, ball, Scene::Time(), blockCounts, blockCountsHistory);
 			}
