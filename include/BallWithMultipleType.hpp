@@ -30,7 +30,7 @@ public:
 	{
 		Color innerColor = m_circleColors[0];
 		Color outerColor = m_circleColors[1];
-		m_circle.draw(innerColor).drawFrame(2, outerColor);
+		m_circle.draw(outerColor).drawFrame(1, Palette::Black).stretched(- m_circle.r / 2).draw(innerColor);
 	}
 
 	Circle getCircle() const
