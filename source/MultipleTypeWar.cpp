@@ -176,8 +176,8 @@ void MultipleTypeWar::drawRankingBest() const
 		const double Occupancy = static_cast<double>(blockCounts.at(types)) / (GridSize.x * GridSize.y) * 100;
 		FontAsset(U"Ranking")(text1).draw(textPos, typeColors.at(type1));
 		FontAsset(U"Ranking")(text2).draw(Arg::topRight = textPos.movedBy(170, 0), typeColors.at(type2));
-		DrawGradientText(FontAsset(U"Ranking"), Format(blockCountsRanking[i].second), textPos.movedBy(200, 0), typeColors.at(type1), typeColors.at(type2));
-		DrawGradientText(FontAsset(U"Ranking"), U"({:.2f}%)"_fmt(Occupancy), textPos.movedBy(250, 0), typeColors.at(type1), typeColors.at(type2));
+		DrawGradientText(FontAsset(U"Ranking"), Format(blockCountsRanking[i].second), textPos.movedBy(190, 0), typeColors.at(type1), typeColors.at(type2));
+		DrawGradientText(FontAsset(U"Ranking"), U"({:.2f}%)"_fmt(Occupancy), textPos.movedBy(260, 0), typeColors.at(type1), typeColors.at(type2));
 	}
 }
 
