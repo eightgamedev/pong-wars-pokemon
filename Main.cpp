@@ -5,13 +5,12 @@
 
 void Main()
 {
-	// フルHDサイズからタスクバーの高さを引いたサイズ
-	Scene::Resize(1920, 1009);
-	Window::SetStyle(WindowStyle::Sizable);
-	ResizeMode::Keep;
-	// Window::SetFullscreen(true, 0);
 	const String applicationName = U"pong-wars-pokemon";
 	Window::SetTitle(applicationName);
+	Window::SetStyle(WindowStyle::Sizable);
+	Window::Maximize();
+	Scene::SetResizeMode(ResizeMode::Keep);
+	Scene::Resize(1920, 1009);	// フルHDサイズからタスクバーの高さを引いたサイズ
 
 	FontAsset::Register(U"Ranking", 20, Typeface::Bold);
 	FontAsset::Register(U"Label", 30, Typeface::Bold);
