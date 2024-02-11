@@ -44,7 +44,7 @@ private:
 	HashTable<Types, Array<BallWithMultipleType>> ballsByType;
 	Grid<BlockWithMultipleType> blocks{ GridSize };
 
-	const double scaleField = 1.2;
+	const double scaleField = 0.6;
 	const double scaleRankingBest = 0.9;
 	const double scaleRankingWorst = 0.9;
 
