@@ -17,7 +17,7 @@ void SingleTypeWar::deleteBlockCounts(const double time)
 void SingleTypeWar::updateBlockCountsHistory()
 {
 	static double lastUpdateTime = 0.0;
-	const double interval = 0.5;
+	const double interval = 0.1;
 	double currentTime = Scene::Time();
 
 	if (currentTime - lastUpdateTime >= interval)
@@ -32,12 +32,12 @@ void SingleTypeWar::updateBlockCountsHistory()
 void SingleTypeWar::updateBlockCountsRanking()
 {
 	static double lastUpdateTimeForRanking = 0.0;
-	const double interval = 0.5;
+	const double interval = 0.1;
 	double currentTime = Scene::Time();
 
 	if (currentTime - lastUpdateTimeForRanking >= interval)
 	{
-		Array<std::pair<Type, int32>> blockCountsRanking(blockCounts.begin(), blockCounts.end());
+		blockCountsRanking = Array<std::pair<Type, int32>> { blockCounts.begin(), blockCounts.end() };
 
 		// ブロック数が大きい順に並べ替え
 		std::sort(blockCountsRanking.begin(), blockCountsRanking.end(),
@@ -153,7 +153,7 @@ void SingleTypeWar::drawBalls() const
 	}
 }
 
-void SingleTypeWar::drawRankingBest(Array<std::pair<Type, int32>> blockCountsRanking) const
+void SingleTypeWar::drawRankingBest() const
 {
 	for (size_t i = 0; i < blockCountsRanking.size(); ++i)
 	{
@@ -312,16 +312,7 @@ void SingleTypeWar::draw() const
 
 	{
 		const Transformer2D transformerForRanking{ matRanking, TransformCursor::Yes };
-
-		Array<std::pair<Type, int32>> blockCountsRanking(blockCounts.begin(), blockCounts.end());
-	
-		// ブロック数が大きい順に並べ替え
-		std::sort(blockCountsRanking.begin(), blockCountsRanking.end(),
-			[](const std::pair<Type, int32>& a, const std::pair<Type, int32>& b) {
-					return a.second > b.second;
-			});
-
-		drawRankingBest(blockCountsRanking);
+		drawRankingBest();
 	}
 
 	{

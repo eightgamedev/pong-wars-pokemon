@@ -18,7 +18,7 @@ private:
 	void adjustBallCounts();
 	void drawBlocks() const;
 	void drawBalls() const;
-	void drawRankingBest(Array<std::pair<Type, int32>> blockCountsRanking) const;
+	void drawRankingBest() const;
 	void drawGraph() const;
 
 	const Vec2 BlockSize{ 15, 15 };
@@ -32,6 +32,7 @@ private:
 	HashTable<Type, size_t> ballCounts;
 	HashTable<Type, size_t> blockCounts;
 	Array<std::pair<double, HashTable<Type, size_t>>> blockCountsHistory;
+	Array<std::pair<Type, int32>> blockCountsRanking;
 
 	const size_t typeCount{ static_cast<size_t>(Type::Count) };
 	HashTable<Type, Array<Ball>> ballsByType;
