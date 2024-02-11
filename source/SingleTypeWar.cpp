@@ -218,7 +218,13 @@ void SingleTypeWar::drawGraph() const
 	Line(0, 0, 0, graphHeight).draw(1, Palette::White);
 
 	// y軸のラベルとグリッドの横線を描画
-	for (int32 i = 0; i <= maxBlockCount; i += 100) { // maxBlockCountはブロックの最大数
+	// maxBlockCountの桁数を計算
+	int digits = maxBlockCount > 0 ? static_cast<int>(std::log10(maxBlockCount)) + 1 : 1;
+
+	// 桁数に応じてspaceを設定
+	size_t space = std::pow(10, digits - 1);
+
+	for (int32 i = 0; i <= maxBlockCount; i += space) { // maxBlockCountはブロックの最大数
 		const double y = graphHeight - i * yScale;
 		const String label = Format(i);
 		FontAsset(U"Label")(label).draw(Arg::rightCenter = Vec2(-40, y), Palette::White);
