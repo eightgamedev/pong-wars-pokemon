@@ -106,7 +106,7 @@ void MultipleTypeWar::adjustBallCounts()
 		Types types = pair.first;
 		int32 blockCount = pair.second;
 		// 調整後のボールの数
-		int32 desiredBallCount = Max(blockCount / 20, 1);
+		int32 desiredBallCount = Max(blockCount / 100, 1);
 
 		// ボールが足りない場合は同じタイプのボールの位置から追加
 		while (ballCounts[types] < desiredBallCount)
@@ -240,7 +240,7 @@ void MultipleTypeWar::drawGraph() const
 	Line(0, 0, 0, graphHeight).draw(1, Palette::White);
 
 	// y軸のラベルとグリッドの横線を描画
-	for (int32 i = 0; i <= maxBlockCount; i += 10) { // maxBlockCountはブロックの最大数
+	for (int32 i = 0; i <= maxBlockCount; i += 100) { // maxBlockCountはブロックの最大数
 		const double y = graphHeight - i * yScale;
 		const String label = Format(i);
 		FontAsset(U"Label")(label).draw(Arg::rightCenter = Vec2(-40, y), Palette::White);
