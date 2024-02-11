@@ -43,12 +43,13 @@ private:
 	HashTable<Types, Array<BallWithMultipleType>> ballsByType;
 	Grid<BlockWithMultipleType> blocks{ GridSize };
 
+	const double scaleField = 1.2;
 	double scaleRankingBest = 0.9;
 	double scaleRankingWorst = 0.9;
 
 	// 描画位置と大きさを設定
 	Mat3x2 matTitle = Mat3x2::Translate(950, 0);
-	Mat3x2 matField = Mat3x2::Scale(1.2, 1.2).translated(WallThickness, WallThickness);
+	Mat3x2 matField = Mat3x2::Scale(scaleField, scaleField).translated(WallThickness, WallThickness);
 	Mat3x2 matForPlot = Mat3x2::Scale(0.35, 0.35).translated(950, 200);
 	Mat3x2 matRankingBest = Mat3x2::Scale(scaleRankingBest, scaleRankingBest).translated(1600, 0);
 	Mat3x2 matRankingWorst = Mat3x2::Scale(scaleRankingWorst, scaleRankingWorst).translated(1600, 520);
