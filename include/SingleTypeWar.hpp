@@ -39,7 +39,6 @@ private:
 	Grid<Block> blocks{ GridSize };
 
 	// 描画位置と大きさを設定
-	Mat3x2 matTitle = Mat3x2::Translate(1000, 0);
 	Mat3x2 matField = Mat3x2::Translate(WallThickness, WallThickness);
 	Mat3x2 matPlot = Mat3x2::Scale(0.4, 0.4).translated(1000, 200);
 	Mat3x2 matRanking = Mat3x2::Scale(0.8, 0.8).translated(1700, 200);

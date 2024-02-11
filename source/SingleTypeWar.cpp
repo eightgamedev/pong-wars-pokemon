@@ -311,13 +311,6 @@ void SingleTypeWar::update()
 void SingleTypeWar::draw() const
 {
 	{
-		const Transformer2D transformer{ matTitle, TransformCursor::Yes };
-
-		FontAsset(U"Title")(U"Pong Wars Pokemon").draw(0, 0, Palette::White);
-		FontAsset(U"Title")(U"@ito_eight").draw(0, 60, Palette::White);
-	}
-
-	{
 		const Transformer2D transformer{ matField, TransformCursor::Yes };
 
 		drawBlocks();
