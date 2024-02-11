@@ -17,7 +17,7 @@ void MultipleTypeWar::updateBlockCountsHistory()
 {
 	static double lastUpdateTimeForHistory = 0.0;
 	double currentTime = Scene::Time() - sceneStartTime;
-	double interval = 0.5;
+	double interval = 0.3;
 
 	if (currentTime - lastUpdateTimeForHistory >= interval)
 	{
