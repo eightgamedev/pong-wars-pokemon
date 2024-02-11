@@ -106,7 +106,7 @@ void MultipleTypeWar::adjustBallCounts()
 		Types types = pair.first;
 		int32 blockCount = pair.second;
 		// 調整後のボールの数
-		int32 desiredBallCount = Max(blockCount / 100, 0);
+		int32 desiredBallCount = Max((blockCount / (gridSectionSize.x * gridSectionSize.y) * 2), 0);
 
 		// ボールが足りない場合は同じタイプのボールの位置から追加
 		if (ballCounts[types] < desiredBallCount)

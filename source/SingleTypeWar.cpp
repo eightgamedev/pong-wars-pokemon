@@ -109,7 +109,7 @@ void SingleTypeWar::adjustBallCounts()
 		Type type = pair.first;
 		int32 blockCount = pair.second;
 		// 調整後のボールの数
-		int32 desiredBallCount = Max(blockCount / 100, 1);
+		int32 desiredBallCount = Max((blockCount / (gridSectionSize.x * gridSectionSize.y)) * 1, 1);
 
 		// ボールが足りない場合は同じタイプのボールの位置から追加
 		if (ballCounts[type] < desiredBallCount)
