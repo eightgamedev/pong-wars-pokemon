@@ -172,7 +172,6 @@ void MultipleTypeWar::drawRankingBest() const
 		const String text2 = typeName.at(type2);
 		FontAsset(U"Ranking")(text1).draw(textPos, typeColors.at(type1));
 		FontAsset(U"Ranking")(text2).draw(Arg::topRight = textPos.movedBy(170, 0), typeColors.at(type2));
-		// FontAsset(U"Ranking")(blockCountsRanking[i].second).draw(Arg::topRight = textPos.movedBy(250, 0), Arg::top = typeColors.at(type1), Arg::bottom = typeColors.at(type2));
 		DrawGradientText(FontAsset(U"Ranking"), Format(blockCountsRanking[i].second), textPos.movedBy(250, 0), typeColors.at(type1), typeColors.at(type2));
 	}
 }
@@ -191,7 +190,6 @@ void MultipleTypeWar::drawRankingWorst() const
 		const String text2 = typeName.at(type2);
 		FontAsset(U"Ranking")(text1).draw(textPos, typeColors.at(type1));
 		FontAsset(U"Ranking")(text2).draw(Arg::topRight = textPos.movedBy(170, 0), typeColors.at(type2));
-		// FontAsset(U"Ranking")(blockCountsRanking[blockCountsRanking.size() - 1 - i].second).draw(Arg::topRight = textPos.movedBy(250, 0), typeColors.at(type1));
 		DrawGradientText(FontAsset(U"Ranking"), Format(blockCountsRanking[blockCountsRanking.size() - 1 - i].second), textPos.movedBy(250, 0), typeColors.at(type1), typeColors.at(type2));
 	}
 }
