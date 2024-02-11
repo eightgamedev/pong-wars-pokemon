@@ -1,24 +1,40 @@
 ﻿# include "SingleTypeWar.hpp"
 
-void SingleTypeWar::updateBlockCountHistory(const Type type, const double time, const int32 countChange)
+void SingleTypeWar::addBlockCounts(const double time)
 {
-	// 60秒経過後、過去60秒より古いデータを削除
-	while (!blockCountsHistory[static_cast<size_t>(type)].isEmpty() && blockCountsHistory[static_cast<size_t>(type)].front().first < time - 60) {
-		blockCountsHistory[static_cast<size_t>(type)].pop_front();
+	blockCountsHistory.push_back({ time, blockCounts });
+}
+
+void SingleTypeWar::deleteBlockCounts(const double time)
+{
+	// 60秒以上前の履歴を削除
+	while (!blockCountsHistory.empty() && blockCountsHistory.front().first < time - 60)
+	{
+		blockCountsHistory.pop_front();
+	}
+}
+
+void SingleTypeWar::updateBlockCountHistory()
+{
+	static double lastUpdateTime = 0.0;
+	const double interval = 0.5;
+	double currentTime = Scene::Time();
+
+	if (currentTime - lastUpdateTime >= interval) // 1秒以上経過したかチェック
+	{
+		addBlockCounts(currentTime); // 1秒ごとにブロック数の履歴を更新
+		lastUpdateTime = currentTime;
 	}
 
-	int32 newCount = (blockCountsHistory[static_cast<size_t>(type)].isEmpty() ? 0 : blockCountsHistory[static_cast<size_t>(type)].back().second) + countChange;
-	blockCountsHistory[static_cast<size_t>(type)].push_back({ time, newCount });
+	deleteBlockCounts(currentTime);
 }
 
 // ブロックのタイプを更新
 void SingleTypeWar::updateBlock(Block & block, const Ball & ball, const double time, const int32 change)
 {
 	blockCounts.at(block.getType())--;
-	updateBlockCountHistory(block.getType(), time, -change);
 	block.setType(ball.getType());
 	blockCounts.at(block.getType())++;
-	updateBlockCountHistory(block.getType(), time, change);
 }
 
 // ボールとブロックの衝突判定と反射
@@ -57,7 +73,7 @@ void SingleTypeWar::checkCollisionAndBounce(Ball & ball)
 				updateBlock(block, ball, Scene::Time(), 1);
 			}
 			else if (affinity == 0.0) {
-				updateBlockCountHistory(block.getType(), Scene::Time(), 0);
+				// do nothing
 			}
 
 			ball.bounce(block.getRect());
@@ -133,7 +149,7 @@ void SingleTypeWar::drawGraph() const
 {
 	size_t maxBlockCount = 0;
 	for (const auto& history : blockCountsHistory) {
-		for (const auto& pair : history) {
+		for (const auto& pair : history.second) {
 			if (pair.second > maxBlockCount) {
 				maxBlockCount = pair.second;
 			}
@@ -182,16 +198,19 @@ void SingleTypeWar::drawGraph() const
 	}
 
 	// グラフを描画
-	for (size_t i = 0; i < blockCountsHistory.size(); ++i) {
-		const Color color = typeColors.at(static_cast<Type>(i));
-		for (size_t j = 1; j < blockCountsHistory[i].size(); ++j) {
-			if (blockCountsHistory[i][j - 1].first >= minTime && blockCountsHistory[i][j].first >= minTime) {
-				const double x1 = (blockCountsHistory[i][j - 1].first - minTime) * timeScale;
-				const double y1 = graphHeight - blockCountsHistory[i][j - 1].second * yScale;
-				const double x2 = (blockCountsHistory[i][j].first - minTime) * timeScale;
-				const double y2 = graphHeight - blockCountsHistory[i][j].second * yScale;
-				Line(x1, y1, x2, y2).draw(5, color);
-			}
+	for (size_t i = 1; i < blockCountsHistory.size(); ++i)
+	{
+		const auto& p0 = blockCountsHistory[i - 1];
+		const auto& p1 = blockCountsHistory[i];
+
+		for (const auto& pair : p0.second)
+		{
+			const double x0 = (p0.first - minTime) * timeScale;
+			const double y0 = graphHeight - pair.second * yScale;
+			const double x1 = (p1.first - minTime) * timeScale;
+			const double y1 = graphHeight - p1.second.at(pair.first) * yScale;
+
+			Line(x0, y0, x1, y1).draw(2, typeColors.at(pair.first));
 		}
 	}
 }
@@ -217,10 +236,7 @@ SingleTypeWar::SingleTypeWar(const InitData& init)
 		}
 	}
 
-	for (size_t i = 0; i < typeCount; ++i)
-	{
-		blockCountsHistory[i].push_back({ 0, blockCounts[static_cast<Type>(i)] });
-	}
+	blockCountsHistory.push_back({ 0, blockCounts });
 
 	const Vec2 blockSectionSize = { (BlockSize * GridSize / 3).x, (BlockSize * GridSize / 6).y };
 
@@ -251,6 +267,7 @@ void SingleTypeWar::update()
 	}
 
 	adjustBallCounts();
+	updateBlockCountHistory();
 }
 
 void SingleTypeWar::draw() const

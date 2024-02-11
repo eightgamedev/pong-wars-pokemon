@@ -9,7 +9,9 @@ public:
 	void update() override;
 	void draw() const override;
 private:
-	void updateBlockCountHistory(const Type type, const double time, const int32 countChange);
+	void addBlockCounts(const double time);
+	void deleteBlockCounts(const double time);
+	void updateBlockCountHistory();
 	void updateBlock(Block& block, const Ball& ball, const double time, const int32 change);
 	void checkCollisionAndBounce(Ball& ball);
 	void adjustBallCounts();
@@ -28,7 +30,7 @@ private:
 
 	HashTable<Type, size_t> ballCounts;
 	HashTable<Type, size_t> blockCounts;
-	Array<Array<std::pair<double, size_t>>> blockCountsHistory{ static_cast<size_t>(Type::Count) };
+	Array<std::pair<double, HashTable<Type, size_t>>> blockCountsHistory;
 
 	const size_t typeCount{ static_cast<size_t>(Type::Count) };
 	HashTable<Type, Array<Ball>> ballsByType;
