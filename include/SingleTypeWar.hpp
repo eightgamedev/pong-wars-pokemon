@@ -13,6 +13,9 @@ private:
 	void updateBlock(Block& block, const Ball& ball, const double time, const int32 change);
 	void checkCollisionAndBounce(Ball& ball);
 	void adjustBallCounts();
+	void drawBlocks() const;
+	void drawBalls() const;
+	void drawRankingBest(Array<std::pair<Type, int32>> blockCountsRanking) const;
 	void drawGraph() const;
 
 	const Vec2 BlockSize{ 15, 15 };

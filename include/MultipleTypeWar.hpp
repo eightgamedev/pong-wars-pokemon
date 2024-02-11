@@ -17,6 +17,10 @@ private:
 	void updateBlock(BlockWithMultipleType& block, const BallWithMultipleType& ball, double time);
 	void checkCollisionAndBounce(BallWithMultipleType& ball);
 	void adjustBallCounts();
+	void drawBlocks() const;
+	void drawBalls() const;
+	void drawRankingBest(Array<std::pair<Types, int32>> blockCountsRanking) const;
+	void drawRankingWorst(Array<std::pair<Types, int32>> blockCountsRanking) const;
 	void drawGraph() const;
 
 	const Vec2 BlockSize{ 10, 10 };

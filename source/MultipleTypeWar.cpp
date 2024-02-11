@@ -110,6 +110,63 @@ void MultipleTypeWar::adjustBallCounts()
 	}
 }
 
+void MultipleTypeWar::drawBlocks() const
+{
+	for (auto& block : blocks)
+	{
+		block.draw();
+	}
+}
+
+void MultipleTypeWar::drawBalls() const
+{
+	for (auto& balls : ballsByType)
+	{
+		for (auto& ball : balls.second)
+		{
+			ball.draw();
+		}
+	}
+}
+
+void MultipleTypeWar::drawRankingBest(Array<std::pair<Types, int32>> blockCountsRanking) const
+{
+
+
+	// トップ20を描画
+	for (size_t i = 0; i < 20; ++i)
+	{
+		const Vec2 textPos = { 0, 25 * i };
+		const Types types = blockCountsRanking[i].first;
+		const Type type1 = types.type1;
+		const Type type2 = types.type2;
+		const String text1 = typeName.at(type1);
+		const String text2 = typeName.at(type2);
+		FontAsset(U"Ranking")(text1).draw(textPos, typeColors.at(type1));
+		FontAsset(U"Ranking")(text2).draw(Arg::topRight = textPos.movedBy(170, 0), typeColors.at(type2));
+		// FontAsset(U"Ranking")(blockCountsRanking[i].second).draw(Arg::topRight = textPos.movedBy(250, 0), Arg::top = typeColors.at(type1), Arg::bottom = typeColors.at(type2));
+		DrawGradientText(FontAsset(U"Ranking"), Format(blockCountsRanking[i].second), textPos.movedBy(250, 0), typeColors.at(type1), typeColors.at(type2));
+	}
+}
+
+void MultipleTypeWar::drawRankingWorst(Array<std::pair<Types, int32>> blockCountsRanking) const
+{
+	// ワースト20を描画
+	for (size_t i = 0; i < 20; ++i)
+	{
+		const Vec2 textPos = { 0, 25 * i };
+		const Types types = blockCountsRanking[blockCountsRanking.size() - 1 - i].first;
+		const Type type1 = types.type1;
+		const Type type2 = types.type2;
+		const String text1 = typeName.at(type1);
+		const String text2 = typeName.at(type2);
+		FontAsset(U"Ranking")(text1).draw(textPos, typeColors.at(type1));
+		FontAsset(U"Ranking")(text2).draw(Arg::topRight = textPos.movedBy(170, 0), typeColors.at(type2));
+		// FontAsset(U"Ranking")(blockCountsRanking[blockCountsRanking.size() - 1 - i].second).draw(Arg::topRight = textPos.movedBy(250, 0), typeColors.at(type1));
+		DrawGradientText(FontAsset(U"Ranking"), Format(blockCountsRanking[blockCountsRanking.size() - 1 - i].second), textPos.movedBy(250, 0), typeColors.at(type1), typeColors.at(type2));
+	}
+}
+
 void MultipleTypeWar::drawGraph() const
 {
 	size_t maxBlockCount = 0;
@@ -274,22 +331,12 @@ void MultipleTypeWar::draw() const
 	{
 		const Transformer2D transformer{ matField, TransformCursor::Yes };
 
-		for (auto& block : blocks)
-		{
-			block.draw();
-		}
+		drawBlocks();
 
-		for (auto& balls : ballsByType)
-		{
-			for (auto& ball : balls.second)
-			{
-				ball.draw();
-			}
-		}
+		drawBalls();
 
 		Wall.draw(Palette::White);
 	}
-
 
 	Array<std::pair<Types, int32>> blockCountsRanking(blockCounts.begin(), blockCounts.end());
 
@@ -300,41 +347,13 @@ void MultipleTypeWar::draw() const
 		});
 
 	{
-		const Transformer2D transformerRankingBest{ matRankingBest, TransformCursor::Yes };
-
-		// トップ20を描画
-		for (size_t i = 0; i < 20; ++i)
-		{
-			const Vec2 textPos = { 0, 25 * i };
-			const Types types = blockCountsRanking[i].first;
-			const Type type1 = types.type1;
-			const Type type2 = types.type2;
-			const String text1 = typeName.at(type1);
-			const String text2 = typeName.at(type2);
-			FontAsset(U"Ranking")(text1).draw(textPos, typeColors.at(type1));
-			FontAsset(U"Ranking")(text2).draw(Arg::topRight = textPos.movedBy(170, 0), typeColors.at(type2));
-			// FontAsset(U"Ranking")(blockCountsRanking[i].second).draw(Arg::topRight = textPos.movedBy(250, 0), Arg::top = typeColors.at(type1), Arg::bottom = typeColors.at(type2));
-			DrawGradientText(FontAsset(U"Ranking"), Format(blockCountsRanking[i].second), textPos.movedBy(250, 0), typeColors.at(type1), typeColors.at(type2));
-		}
+		const Transformer2D transformerForRankingBest{ matRankingBest, TransformCursor::Yes };
+		drawRankingBest(blockCountsRanking);
 	}
 
 	{
-		const Transformer2D transformerRankingWorst{ matRankingWorst, TransformCursor::Yes };
-
-		// ワースト20を描画
-		for (size_t i = 0; i < 20; ++i)
-		{
-			const Vec2 textPos = { 0, 25 * i };
-			const Types types = blockCountsRanking[blockCountsRanking.size() - 1 - i].first;
-			const Type type1 = types.type1;
-			const Type type2 = types.type2;
-			const String text1 = typeName.at(type1);
-			const String text2 = typeName.at(type2);
-			FontAsset(U"Ranking")(text1).draw(textPos, typeColors.at(type1));
-			FontAsset(U"Ranking")(text2).draw(Arg::topRight = textPos.movedBy(170, 0), typeColors.at(type2));
-			// FontAsset(U"Ranking")(blockCountsRanking[blockCountsRanking.size() - 1 - i].second).draw(Arg::topRight = textPos.movedBy(250, 0), typeColors.at(type1));
-			DrawGradientText(FontAsset(U"Ranking"), Format(blockCountsRanking[blockCountsRanking.size() - 1 - i].second), textPos.movedBy(250, 0), typeColors.at(type1), typeColors.at(type2));
-		}
+		const Transformer2D transformerForRankingWorst{ matRankingWorst, TransformCursor::Yes };
+		drawRankingWorst(blockCountsRanking);
 	}
 
 	{

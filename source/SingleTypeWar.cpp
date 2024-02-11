@@ -98,6 +98,37 @@ void SingleTypeWar::adjustBallCounts()
 	}
 }
 
+void SingleTypeWar::drawBlocks() const
+{
+	for (auto& block : blocks)
+	{
+		block.draw();
+	}
+}
+
+void SingleTypeWar::drawBalls() const
+{
+	for (auto& balls : ballsByType)
+	{
+		for (auto& ball : balls.second)
+		{
+			ball.draw();
+		}
+	}
+}
+
+void SingleTypeWar::drawRankingBest(Array<std::pair<Type, int32>> blockCountsRanking) const
+{
+	for (size_t i = 0; i < blockCountsRanking.size(); ++i)
+	{
+		const Vec2 textPos = { 0, 25 * i };
+		const Type type = blockCountsRanking[i].first;
+		const String text = typeName.at(type) + U": ";
+		FontAsset(U"Ranking")(text).draw(textPos, typeColors.at(type));
+		FontAsset(U"Ranking")(blockCountsRanking[i].second).draw(Arg::topRight = textPos.movedBy(150, 0), typeColors.at(type));
+	}
+}
+
 void SingleTypeWar::drawGraph() const
 {
 	size_t maxBlockCount = 0;
@@ -234,18 +265,9 @@ void SingleTypeWar::draw() const
 	{
 		const Transformer2D transformer{ matField, TransformCursor::Yes };
 
-		for (auto& block : blocks)
-		{
-			block.draw();
-		}
+		drawBlocks();
 
-		for (auto& ball : ballsByType)
-		{
-			for (auto& ball : ball.second)
-			{
-				ball.draw();
-			}
-		}
+		drawBalls();
 
 		Wall.draw(Palette::White);
 	}
@@ -260,7 +282,10 @@ void SingleTypeWar::draw() const
 			[](const std::pair<Type, int32>& a, const std::pair<Type, int32>& b) {
 					return a.second > b.second;
 			});
-		// ランキングを描画
+
+		drawRankingBest(blockCountsRanking);
+
+
 		for (size_t i = 0; i < blockCountsRanking.size(); ++i)
 		{
 			const Vec2 textPos = { 0, 25 * i };
