@@ -114,9 +114,15 @@ void SingleTypeWar::adjustBallCounts()
 		// ボールが足りない場合は同じタイプのボールの位置から追加
 		while (ballCounts[type] < desiredBallCount)
 		{
+			Array<Vec2> ballPositions;
 			for (auto& ball : ballsByType[type])
 			{
-				ballsByType[type].push_back(Ball{ type, ball.getCircle().center });
+				ballPositions.push_back(ball.getCircle().center);
+			}
+
+			for (const auto& position : ballPositions)
+			{
+				ballsByType[type].push_back(Ball{ type, position });
 				ballCounts[type]++;
 				if (ballCounts[type] >= desiredBallCount)
 				{
