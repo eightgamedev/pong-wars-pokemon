@@ -339,7 +339,7 @@ void MultipleTypeWar::update()
 	}
 
 	adjustBallCounts();
-	updateBlockCountHistory();
+	updateBlockCountsHistory();
 	updateBlockCountsRanking();
 }
 

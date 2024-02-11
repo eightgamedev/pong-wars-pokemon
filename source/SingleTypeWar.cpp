@@ -20,13 +20,33 @@ void SingleTypeWar::updateBlockCountsHistory()
 	const double interval = 0.5;
 	double currentTime = Scene::Time();
 
-	if (currentTime - lastUpdateTime >= interval) // 1秒以上経過したかチェック
+	if (currentTime - lastUpdateTime >= interval)
 	{
-		addBlockCounts(currentTime); // 1秒ごとにブロック数の履歴を更新
+		addBlockCounts(currentTime);
 		lastUpdateTime = currentTime;
 	}
 
 	deleteBlockCounts(currentTime);
+}
+
+void SingleTypeWar::updateBlockCountsRanking()
+{
+	static double lastUpdateTimeForRanking = 0.0;
+	const double interval = 0.5;
+	double currentTime = Scene::Time();
+
+	if (currentTime - lastUpdateTimeForRanking >= interval)
+	{
+		Array<std::pair<Type, int32>> blockCountsRanking(blockCounts.begin(), blockCounts.end());
+
+		// ブロック数が大きい順に並べ替え
+		std::sort(blockCountsRanking.begin(), blockCountsRanking.end(),
+					[](const std::pair<Type, int32>& a, const std::pair<Type, int32>& b) {
+							return a.second > b.second;
+			});
+
+		lastUpdateTimeForRanking = currentTime;
+	}
 }
 
 // ブロックのタイプを更新
@@ -268,6 +288,7 @@ void SingleTypeWar::update()
 
 	adjustBallCounts();
 	updateBlockCountsHistory();
+	updateBlockCountsRanking();
 }
 
 void SingleTypeWar::draw() const
