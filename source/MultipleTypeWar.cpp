@@ -1,15 +1,30 @@
 ﻿# include "MultipleTypeWar.hpp"
 
-void updateBlockCountHistoryForMultipleType(const Types& types, const double time, const int32 countChange, Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory)
+void addBlockCounts(const double time, Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory, HashTable<Types, size_t>& blockCounts)
 {
-	// 60秒経過後、過去60秒より古いデータを削除
-	while (!blockCountsHistory.isEmpty() && blockCountsHistory.front().first < time - 60) {
+	blockCountsHistory.push_back({ time, blockCounts });
+}
+
+void deleteBlockCounts(const double time, Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory)
+{
+	while (!blockCountsHistory.isEmpty() && blockCountsHistory.front().first < time - 30)
+	{
 		blockCountsHistory.pop_front();
 	}
+}
 
-	HashTable<Types, size_t> newBlockCounts = blockCountsHistory.back().second;
-	newBlockCounts[types] += countChange;
-	blockCountsHistory.push_back({ time, newBlockCounts });
+void updateBlockCountHistoryForMultipleType(Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory, HashTable<Types, size_t>& blockCounts)
+{
+	static double lastUpdateTime = 0.0;
+	double currentTime = Scene::Time();
+
+	if (currentTime - lastUpdateTime >= 1.0) // 1秒以上経過したかチェック
+	{
+		addBlockCounts(currentTime, blockCountsHistory, blockCounts); // 1秒ごとにブロック数の履歴を更新
+		lastUpdateTime = currentTime;
+	}
+
+	deleteBlockCounts(currentTime, blockCountsHistory); // 60秒以上前の履歴を削除
 }
 
 void updateBlockWithMultipleType(BlockWithMultipleType& block, const BallWithMultipleType& ball, double time, HashTable<Types, size_t>& blockCounts, Array<std::pair<double, HashTable<Types, size_t>>>& blockCountsHistory)
@@ -17,7 +32,6 @@ void updateBlockWithMultipleType(BlockWithMultipleType& block, const BallWithMul
 	blockCounts.at(block.getTypes())--;
 	block.setType(ball.getTypes());
 	blockCounts.at(block.getTypes())++;
-	// updateBlockCountHistoryForMultipleType(block.getTypes(), time, 1, blockCountsHistory);
 }
 
 void checkCollisionAndBounceForMultipleType(BallWithMultipleType &ball,
@@ -114,11 +128,11 @@ void drawGraphForMultipleType(const Array<std::pair<double, HashTable<Types, siz
 	// 現在の時間を取得
 	double currentTime = Scene::Time();
 
-	// 過去60秒以降の最小の時間を計算
-	double minTime = std::max(0.0, currentTime - 60);
-
 	// 時間の最大値
-	double maxTime = 60;
+	double maxTime = 30;
+
+	// 過去30秒以降の最小の時間を計算
+	double minTime = std::max(0.0, currentTime - maxTime);
 
 	// グラフのサイズとスケールを計算
 	const double graphHeight = 1000.0;
@@ -144,7 +158,7 @@ void drawGraphForMultipleType(const Array<std::pair<double, HashTable<Types, siz
 	Line(0, 0, 0, graphHeight).draw(1, Palette::White);
 
 	// y軸のラベルとグリッドの横線を描画
-	for (int32 i = 0; i <= maxBlockCount; i += 100) { // maxBlockCountはブロックの最大数
+	for (int32 i = 0; i <= maxBlockCount; i += 10) { // maxBlockCountはブロックの最大数
 		const double y = graphHeight - i * yScale;
 		const String label = Format(i);
 		FontAsset(U"Label")(label).draw(Arg::rightCenter = Vec2(-40, y), Palette::White);
@@ -163,7 +177,7 @@ void drawGraphForMultipleType(const Array<std::pair<double, HashTable<Types, siz
 			const double x1 = (current.first - minTime) * timeScale;
 			const double y1 = graphHeight - pair.second * yScale;
 
-			Line(x0, y0, x1, y1).draw(2, Palette::White);
+			Line(x0, y0, x1, y1).draw(2, typeColors.at(pair.first.type1));
 		}
 	}
 
@@ -249,6 +263,8 @@ void MultipleTypeWar::update()
 	}
 
 	adjustBallCountsForMultipleType(ballsByType, blocks, ballCounts, blockCounts);
+	updateBlockCountHistoryForMultipleType(blockCountsHistory, blockCounts);
+
 }
 
 void MultipleTypeWar::draw() const
@@ -328,6 +344,6 @@ void MultipleTypeWar::draw() const
 
 	{
 		const Transformer2D transformerForPlot{ matForPlot, TransformCursor::Yes };
-		// drawGraphForMultipleType(blockCountsHistory);
+		drawGraphForMultipleType(blockCountsHistory);
 	}
 }

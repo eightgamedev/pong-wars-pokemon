@@ -30,11 +30,11 @@ private:
 	Grid<BlockWithMultipleType> blocks{ GridSize };
 
 	// 描画位置と大きさを設定
-	Mat3x2 matTitle = Mat3x2::Translate(1000, 0);
+	Mat3x2 matTitle = Mat3x2::Translate(950, 0);
 	Mat3x2 matField = Mat3x2::Scale(1.2, 1.2).translated(WallThickness, WallThickness);
-	Mat3x2 matForPlot = Mat3x2::Scale(0.4, 0.4).translated(1000, 200);
-	Mat3x2 matForRanking = Mat3x2::Scale(0.8, 0.8).Translate(1000, 200);
-	Mat3x2 matForWorst = Mat3x2::Scale(0.8, 0.8).Translate(1400, 200);
+	Mat3x2 matForPlot = Mat3x2::Scale(0.35, 0.35).translated(950, 200);
+	Mat3x2 matForRanking = Mat3x2::Scale(0.5, 0.5).Translate(1600, 0);
+	Mat3x2 matForWorst = Mat3x2::Scale(0.5, 0.5).Translate(1600, 520);
 };
 
 
