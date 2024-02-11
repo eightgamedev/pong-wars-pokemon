@@ -305,8 +305,6 @@ MultipleTypeWar::MultipleTypeWar(const InitData& init)
 		}
 	}
 
-	blockCountsHistory.push_back({ 0, blockCounts });
-
 	const Vec2 blockSectionSize = Vec2{ GridSize } / typeCount * BlockSize;
 
 

@@ -269,8 +269,6 @@ SingleTypeWar::SingleTypeWar(const InitData& init)
 		}
 	}
 
-	blockCountsHistory.push_back({ 0, blockCounts });
-
 	const Vec2 blockSectionSize = { (BlockSize * GridSize / 3).x, (BlockSize * GridSize / 6).y };
 
 	for (size_t i = 0; i < typeCount; ++i)
