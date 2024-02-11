@@ -112,7 +112,7 @@ void SingleTypeWar::adjustBallCounts()
 		int32 desiredBallCount = Max(blockCount / 100, 1);
 
 		// ボールが足りない場合は同じタイプのボールの位置から追加
-		while (ballCounts[type] < desiredBallCount)
+		if (ballCounts[type] < desiredBallCount)
 		{
 			Array<Vec2> ballPositions;
 			for (auto& ball : ballsByType[type])
@@ -130,13 +130,16 @@ void SingleTypeWar::adjustBallCounts()
 				}
 			}
 		}
-
 		// ボールが多すぎる場合は削除
-		while (ballCounts[type] > desiredBallCount)
+		else if (ballCounts[type] > desiredBallCount)
 		{
-			ballsByType[type].pop_back();
-			ballCounts[type]--;
+			while (ballCounts[type] > desiredBallCount)
+			{
+				ballsByType[type].pop_back();
+				ballCounts[type]--;
+			}
 		}
+
 	}
 }
 
