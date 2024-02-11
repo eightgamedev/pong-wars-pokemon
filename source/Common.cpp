@@ -1,6 +1,6 @@
 ﻿# include "Common.hpp"
 
-void DrawGradientText(const Font& font, const String& text, const Vec2& pos, const ColorF& topColor, const ColorF& bottomColor)
+void DrawGradientText(const Font& font, const String& text, const Vec2& pos, const ColorF & topColor, const ColorF& bottomColor)
 {
 	const Vec2 basePos = pos;
 

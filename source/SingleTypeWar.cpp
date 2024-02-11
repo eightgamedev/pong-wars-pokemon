@@ -169,8 +169,10 @@ void SingleTypeWar::drawRankingBest() const
 		const Vec2 textPos = { 0, 25 * i };
 		const Type type = blockCountsRanking[i].first;
 		const String text = typeName.at(type) + U": ";
+		const double Occupancy = static_cast<double>(blockCounts.at(type)) / (GridSize.x * GridSize.y) * 100;
 		FontAsset(U"Ranking")(text).draw(textPos, typeColors.at(type));
-		FontAsset(U"Ranking")(blockCountsRanking[i].second).draw(Arg::topRight = textPos.movedBy(150, 0), typeColors.at(type));
+		FontAsset(U"Ranking")(blockCountsRanking[i].second).draw(Arg::topRight = textPos.movedBy(140, 0), typeColors.at(type));
+		FontAsset(U"Ranking")(U"({:.2f}%)"_fmt(Occupancy)).draw(textPos.movedBy(160, 0), typeColors.at(type));
 	}
 }
 
