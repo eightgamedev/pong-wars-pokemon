@@ -300,7 +300,7 @@ void MultipleTypeWar::draw() const
 		});
 
 	{
-		const Transformer2D transformerForRanking{ matForRanking, TransformCursor::Yes };
+		const Transformer2D transformerRankingBest{ matRankingBest, TransformCursor::Yes };
 
 		// トップ20を描画
 		for (size_t i = 0; i < 20; ++i)
@@ -319,7 +319,7 @@ void MultipleTypeWar::draw() const
 	}
 
 	{
-		const Transformer2D transformerForWorst{ matForWorst, TransformCursor::Yes };
+		const Transformer2D transformerRankingWorst{ matRankingWorst, TransformCursor::Yes };
 
 		// ワースト20を描画
 		for (size_t i = 0; i < 20; ++i)
