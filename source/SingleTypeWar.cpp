@@ -251,7 +251,7 @@ void SingleTypeWar::draw() const
 	}
 
 	{
-		const Transformer2D transformerForRanking{ matForRanking, TransformCursor::Yes };
+		const Transformer2D transformerForRanking{ matRanking, TransformCursor::Yes };
 
 		Array<std::pair<Type, int32>> blockCountsRanking(blockCounts.begin(), blockCounts.end());
 	
@@ -272,7 +272,7 @@ void SingleTypeWar::draw() const
 	}
 
 	{
-		const Transformer2D transformerForPlot{ matForPlot, TransformCursor::Yes };
+		const Transformer2D transformerForPlot{ matPlot, TransformCursor::Yes };
 		drawGraph();
 	}
 }
