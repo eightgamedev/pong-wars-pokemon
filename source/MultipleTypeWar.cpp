@@ -13,18 +13,39 @@ void MultipleTypeWar::deleteBlockCounts(const double time)
 	}
 }
 
-void MultipleTypeWar::updateBlockCountHistory()
+void MultipleTypeWar::updateBlockCountsHistory()
 {
-	static double lastUpdateTime = 0.0;
+	static double lastUpdateTimeForHistory = 0.0;
 	double currentTime = Scene::Time();
+	double interval = 0.5;
 
-	if (currentTime - lastUpdateTime >= 1.0) // 1秒以上経過したかチェック
+	if (currentTime - lastUpdateTimeForHistory >= interval)
 	{
-		addBlockCounts(currentTime); // 1秒ごとにブロック数の履歴を更新
-		lastUpdateTime = currentTime;
+		addBlockCounts(currentTime);
+		lastUpdateTimeForHistory = currentTime;
 	}
 
-	deleteBlockCounts(currentTime); // 60秒以上前の履歴を削除
+	deleteBlockCounts(currentTime);
+}
+
+void MultipleTypeWar::updateBlockCountsRanking()
+{
+	static double lastUpdateTimeForRanking = 0.0;
+	double currentTime = Scene::Time();
+	double interval = 0.5;
+
+	if (currentTime - lastUpdateTimeForRanking >= interval)
+	{
+		blockCountsRanking = Array<std::pair<Types, int32>>(blockCounts.begin(), blockCounts.end());
+
+		// ブロック数が大きい順に並べ替え
+		std::sort(blockCountsRanking.begin(), blockCountsRanking.end(),
+					[](const std::pair<Types, int32>& a, const std::pair<Types, int32>& b) {
+						return a.second > b.second;
+			});
+
+		lastUpdateTimeForRanking = currentTime;
+	}
 }
 
 void MultipleTypeWar::updateBlock(BlockWithMultipleType& block, const BallWithMultipleType& ball, double time)
@@ -110,6 +131,8 @@ void MultipleTypeWar::adjustBallCounts()
 	}
 }
 
+
+
 void MultipleTypeWar::drawBlocks() const
 {
 	for (auto& block : blocks)
@@ -129,12 +152,11 @@ void MultipleTypeWar::drawBalls() const
 	}
 }
 
-void MultipleTypeWar::drawRankingBest(Array<std::pair<Types, int32>> blockCountsRanking) const
+void MultipleTypeWar::drawRankingBest() const
 {
-
-
 	// トップ20を描画
-	for (size_t i = 0; i < 20; ++i)
+	size_t limit = Min(blockCountsRanking.size(), size_t(20));
+	for (size_t i = 0; i < limit; ++i)
 	{
 		const Vec2 textPos = { 0, 25 * i };
 		const Types types = blockCountsRanking[i].first;
@@ -149,10 +171,11 @@ void MultipleTypeWar::drawRankingBest(Array<std::pair<Types, int32>> blockCounts
 	}
 }
 
-void MultipleTypeWar::drawRankingWorst(Array<std::pair<Types, int32>> blockCountsRanking) const
+void MultipleTypeWar::drawRankingWorst() const
 {
 	// ワースト20を描画
-	for (size_t i = 0; i < 20; ++i)
+	size_t limit = Min(blockCountsRanking.size(), size_t(20));
+	for (size_t i = 0; i < limit; ++i)
 	{
 		const Vec2 textPos = { 0, 25 * i };
 		const Types types = blockCountsRanking[blockCountsRanking.size() - 1 - i].first;
@@ -317,6 +340,7 @@ void MultipleTypeWar::update()
 
 	adjustBallCounts();
 	updateBlockCountHistory();
+	updateBlockCountsRanking();
 }
 
 void MultipleTypeWar::draw() const
@@ -338,22 +362,14 @@ void MultipleTypeWar::draw() const
 		Wall.draw(Palette::White);
 	}
 
-	Array<std::pair<Types, int32>> blockCountsRanking(blockCounts.begin(), blockCounts.end());
-
-	// ブロック数が大きい順に並べ替え
-	std::sort(blockCountsRanking.begin(), blockCountsRanking.end(),
-		[](const std::pair<Types, int32>& a, const std::pair<Types, int32>& b) {
-			return a.second > b.second;
-		});
-
 	{
 		const Transformer2D transformerForRankingBest{ matRankingBest, TransformCursor::Yes };
-		drawRankingBest(blockCountsRanking);
+		drawRankingBest();
 	}
 
 	{
 		const Transformer2D transformerForRankingWorst{ matRankingWorst, TransformCursor::Yes };
-		drawRankingWorst(blockCountsRanking);
+		drawRankingWorst();
 	}
 
 	{

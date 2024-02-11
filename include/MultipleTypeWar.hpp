@@ -13,14 +13,15 @@ public:
 private:
 	void addBlockCounts(const double time);
 	void deleteBlockCounts(const double time);
-	void updateBlockCountHistory();
+	void updateBlockCountsHistory();
+	void updateBlockCountsRanking();
 	void updateBlock(BlockWithMultipleType& block, const BallWithMultipleType& ball, double time);
 	void checkCollisionAndBounce(BallWithMultipleType& ball);
 	void adjustBallCounts();
 	void drawBlocks() const;
 	void drawBalls() const;
-	void drawRankingBest(Array<std::pair<Types, int32>> blockCountsRanking) const;
-	void drawRankingWorst(Array<std::pair<Types, int32>> blockCountsRanking) const;
+	void drawRankingBest() const;
+	void drawRankingWorst() const;
 	void drawGraph() const;
 
 	const Vec2 BlockSize{ 10, 10 };
@@ -37,6 +38,7 @@ private:
 	HashTable<Types, size_t> ballCounts;
 	HashTable<Types, size_t> blockCounts;
 	Array<std::pair<double, HashTable<Types, size_t>>> blockCountsHistory;
+	Array<std::pair<Types, int32>> blockCountsRanking;
 
 	HashTable<Types, Array<BallWithMultipleType>> ballsByType;
 	Grid<BlockWithMultipleType> blocks{ GridSize };

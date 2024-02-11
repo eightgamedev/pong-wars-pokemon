@@ -11,7 +11,8 @@ public:
 private:
 	void addBlockCounts(const double time);
 	void deleteBlockCounts(const double time);
-	void updateBlockCountHistory();
+	void updateBlockCountsHistory();
+	void updateBlockCountsRanking();
 	void updateBlock(Block& block, const Ball& ball, const double time, const int32 change);
 	void checkCollisionAndBounce(Ball& ball);
 	void adjustBallCounts();

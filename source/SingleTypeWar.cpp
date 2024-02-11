@@ -14,7 +14,7 @@ void SingleTypeWar::deleteBlockCounts(const double time)
 	}
 }
 
-void SingleTypeWar::updateBlockCountHistory()
+void SingleTypeWar::updateBlockCountsHistory()
 {
 	static double lastUpdateTime = 0.0;
 	const double interval = 0.5;
@@ -267,7 +267,7 @@ void SingleTypeWar::update()
 	}
 
 	adjustBallCounts();
-	updateBlockCountHistory();
+	updateBlockCountsHistory();
 }
 
 void SingleTypeWar::draw() const
