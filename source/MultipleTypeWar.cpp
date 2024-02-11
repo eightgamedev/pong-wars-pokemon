@@ -382,7 +382,7 @@ void MultipleTypeWar::draw() const
 	}
 
 	{
-		const Transformer2D transformerForPlot{ matForPlot, TransformCursor::Yes };
+		const Transformer2D transformerForPlot{ matPlot, TransformCursor::Yes };
 		drawGraph();
 	}
 }
